@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMUCT Lost & Found Portal - Mobile App Skeleton</title>
+  <!-- Google Fonts & Material Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-900 text-slate-100">
+
+  <!-- Top Controller Bar for Prototype Viewing -->
+  <header class="prototype-bar">
+    <div class="brand-group">
+      <div class="smuct-logo-badge">
+        <span class="material-icons-round">search_off</span>
+      </div>
+      <div>
+        <h1 class="text-sm font-bold tracking-tight">SMUCT Lost & Found Portal</h1>
+        <p class="text-xs text-slate-400">Mobile Application Interactive Skeleton (SRS v1.0)</p>
+      </div>
+    </div>
+
+    <div class="controls-group">
+      <!-- Role Switcher -->
+      <div class="role-switcher">
+        <span class="text-xs font-medium text-slate-400">Simulate Role:</span>
+        <button id="roleStudentBtn" class="role-btn active" onclick="app.setRole('student')">
+          <span class="material-icons-round text-sm">person</span> Student / Staff
+        </button>
+        <button id="roleAdminBtn" class="role-btn" onclick="app.setRole('admin')">
+          <span class="material-icons-round text-sm">admin_panel_settings</span> Administrator
+        </button>
+      </div>
+
+      <!-- View Mode Switcher -->
+      <div class="view-mode-toggle">
+        <button id="viewMobileBtn" class="view-btn active" onclick="app.setViewMode('mobile')" title="Mobile Device Shell View">
+          <span class="material-icons-round">smartphone</span>
+        </button>
+        <button id="viewFullBtn" class="view-btn" onclick="app.setViewMode('fullscreen')" title="Full Canvas View">
+          <span class="material-icons-round">aspect_ratio</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="app-stage" id="appStage">
+    <!-- Mobile Device Frame Container -->
+    <div class="device-frame" id="deviceFrame">
+      <!-- Phone Hardware Bezel Elements -->
+      <div class="notch">
+        <div class="camera"></div>
+        <div class="speaker"></div>
+      </div>
+      
+      <!-- Screen Content Viewport -->
+      <div class="screen-viewport">
+        <!-- Status Bar -->
+        <div class="status-bar">
+          <span class="time" id="clockTime">12:30</span>
+          <div class="status-icons">
+            <span class="material-icons-round text-xs">signal_cellular_4_bar</span>
+            <span class="material-icons-round text-xs">wifi</span>
+            <span class="material-icons-round text-xs">battery_full</span>
+          </div>
+        </div>
+
+        <!-- Application Content Container -->
+        <div class="app-content" id="appContent">
+          <!-- Views rendered dynamically via app.js -->
+        </div>
+
+        <!-- Bottom Navigation Bar (For Student/Staff Role) -->
+        <nav class="bottom-nav" id="bottomNav">
+          <button class="nav-item active" data-view="feed" onclick="app.navigateTo('feed')">
+            <span class="material-icons-round">grid_view</span>
+            <span class="label">Explore</span>
+          </button>
+          <button class="nav-item" data-view="search" onclick="app.navigateTo('search')">
+            <span class="material-icons-round">search</span>
+            <span class="label">Search</span>
+          </button>
+          <button class="nav-item fab-item" data-view="report" onclick="app.navigateTo('report')" title="Report Item">
+            <div class="fab-circle">
+              <span class="material-icons-round">add</span>
+            </div>
+            <span class="label">Report</span>
+          </button>
+          <button class="nav-item" data-view="notifications" onclick="app.navigateTo('notifications')">
+            <div class="icon-wrap">
+              <span class="material-icons-round">notifications</span>
+              <span class="badge-dot" id="notifBadge"></span>
+            </div>
+            <span class="label">Alerts</span>
+          </button>
+          <button class="nav-item" data-view="profile" onclick="app.navigateTo('profile')">
+            <span class="material-icons-round">person_outline</span>
+            <span class="label">Profile</span>
+          </button>
+        </nav>
+
+        <!-- Admin Bottom Navigation Bar (For Admin Role) -->
+        <nav class="bottom-nav admin-nav hidden" id="adminBottomNav">
+          <button class="nav-item active" data-view="admin-dashboard" onclick="app.navigateTo('admin-dashboard')">
+            <span class="material-icons-round">dashboard</span>
+            <span class="label">Dashboard</span>
+          </button>
+          <button class="nav-item" data-view="admin-claims" onclick="app.navigateTo('admin-claims')">
+            <div class="icon-wrap">
+              <span class="material-icons-round">verified_user</span>
+              <span class="badge-dot" id="claimsBadge"></span>
+            </div>
+            <span class="label">Claims</span>
+          </button>
+          <button class="nav-item" data-view="admin-posts" onclick="app.navigateTo('admin-posts')">
+            <span class="material-icons-round">folder_special</span>
+            <span class="label">Posts</span>
+          </button>
+          <button class="nav-item" data-view="admin-users" onclick="app.navigateTo('admin-users')">
+            <span class="material-icons-round">people_alt</span>
+            <span class="label">Users</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal Overlays Container -->
+  <div id="modalContainer" class="modal-overlay hidden"></div>
+
+  <!-- Toast Notification System -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
