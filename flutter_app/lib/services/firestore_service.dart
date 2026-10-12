@@ -56,6 +56,12 @@ class FirestoreService {
     _mockClaims.add(claim);
   }
 
+  Future<void> submitClaimRequest(ClaimModel claim) => submitClaim(claim);
+
+  Stream<List<ClaimModel>> streamUserClaims(String userId) async* {
+    yield _mockClaims.where((c) => c.claimantId == userId).toList();
+  }
+
   Future<List<ClaimModel>> getPendingClaims() async {
     await Future.delayed(const Duration(milliseconds: 400));
     return _mockClaims.where((c) => c.status == 'Pending').toList();

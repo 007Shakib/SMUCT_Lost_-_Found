@@ -11,6 +11,8 @@ class ItemModel {
   final DateTime datePosted;
   final String authorName;
 
+  String get category => categoryId;
+
   ItemModel({
     required this.itemId,
     required this.userId,

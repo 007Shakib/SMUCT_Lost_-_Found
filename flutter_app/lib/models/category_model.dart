@@ -1,8 +1,11 @@
-/// Category Model for SMUCT Lost & Found Items (ER Diagram: Category Entity)
+/// Category Model for SMUCT Lost & Found Items
 class CategoryModel {
   final String categoryId;
   final String categoryName;
   final String iconName;
+
+  String get id => categoryId;
+  String get name => categoryName;
 
   CategoryModel({
     required this.categoryId,

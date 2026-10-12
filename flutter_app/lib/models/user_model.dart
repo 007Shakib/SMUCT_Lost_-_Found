@@ -1,11 +1,19 @@
 class UserModel {
   final String userId;
-  final String name;
+  String name;
   final String email;
-  final String role; // 'Student', 'Teacher', 'Staff', 'Admin'
-  final String? phoneNumber;
-  final String? profilePhotoUrl;
-  final bool isSuspended;
+  final String role; // 'Student', 'Teacher & Staff', 'Admin'
+  String? phoneNumber;
+  String? profilePhotoUrl;
+  final String? department;
+  final String? studentId;
+  bool isSuspended;
+
+  String get uid => userId;
+  String get phone => phoneNumber ?? '';
+  set phone(String val) => phoneNumber = val;
+  String? get avatarUrl => profilePhotoUrl;
+  set avatarUrl(String? val) => profilePhotoUrl = val;
 
   UserModel({
     required this.userId,
@@ -14,6 +22,8 @@ class UserModel {
     required this.role,
     this.phoneNumber,
     this.profilePhotoUrl,
+    this.department,
+    this.studentId,
     this.isSuspended = false,
   });
 
@@ -25,6 +35,8 @@ class UserModel {
       role: map['role'] ?? 'Student',
       phoneNumber: map['phoneNumber'],
       profilePhotoUrl: map['profilePhotoUrl'],
+      department: map['department'],
+      studentId: map['studentId'],
       isSuspended: map['isSuspended'] ?? false,
     );
   }
@@ -36,6 +48,8 @@ class UserModel {
       'role': role,
       'phoneNumber': phoneNumber,
       'profilePhotoUrl': profilePhotoUrl,
+      'department': department,
+      'studentId': studentId,
       'isSuspended': isSuspended,
     };
   }

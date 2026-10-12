@@ -1,59 +1,98 @@
 import 'package:flutter/material.dart';
-import '../../models/claim_model.dart';
-import '../../services/firestore_service.dart';
+import 'package:intl/intl.dart';
+import '../../config/app_theme.dart';
+import '../../mock/mock_data.dart';
+import '../../widgets/empty_state.dart';
+import '../../widgets/status_badge.dart';
 
-/// Track Submitted Claims Screen (UC-07 Track / FR-07)
-class MyClaimsScreen extends StatelessWidget {
+/// My Submitted Claims Screen
+class MyClaimsScreen extends StatefulWidget {
   const MyClaimsScreen({super.key});
 
   @override
+  State<MyClaimsScreen> createState() => _MyClaimsScreenState();
+}
+
+class _MyClaimsScreenState extends State<MyClaimsScreen> {
+  @override
   Widget build(BuildContext context) {
-    final firestoreService = FirestoreService();
+    final myClaims = MockData.claims.where((c) => c.claimantId == MockData.currentUser.uid).toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My Claim Requests (UC-07)')),
-      body: StreamBuilder<List<ClaimModel>>(
-        stream: firestoreService.streamUserClaims('usr_student_01'),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      backgroundColor: AppTheme.darkBackground,
+      appBar: AppBar(
+        title: const Text('My Claims'),
+        backgroundColor: Colors.transparent,
+      ),
+      body: SafeArea(
+        child: myClaims.isEmpty
+            ? EmptyState(
+                icon: Icons.fact_check_outlined,
+                title: "You haven't submitted any claims",
+                description: 'When you claim a found item on campus, your claim status will appear here.',
+                buttonText: 'Browse Found Items',
+                onButtonPressed: () => Navigator.pushReplacementNamed(context, '/home'),
+              )
+            : ListView.builder(
+                padding: const EdgeInsets.all(20),
+                itemCount: myClaims.length,
+                itemBuilder: (ctx, idx) {
+                  final claim = myClaims[idx];
+                  final formattedDate = DateFormat('MMM d, yyyy • h:mm a').format(claim.dateSubmitted);
 
-          final claims = snapshot.data!;
-
-          if (claims.isEmpty) {
-            return const Center(child: Text('No active claim requests.'));
-          }
-
-          return ListView.builder(
-            itemCount: claims.length,
-            itemBuilder: (context, index) {
-              final claim = claims[index];
-              Color statusColor = Colors.orange;
-              if (claim.status == 'Approved') statusColor = Colors.green;
-              if (claim.status == 'Rejected') statusColor = Colors.red;
-
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: ListTile(
-                  title: Text(claim.itemTitle, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text('Justification: ${claim.justification}'),
-                  trailing: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 14),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: statusColor.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
+                      color: AppTheme.cardSurface,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppTheme.borderSubtle),
                     ),
-                    child: Text(
-                      claim.status,
-                      style: TextStyle(color: statusColor, fontWeight: FontWeight.bold),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            StatusBadge(status: claim.status),
+                            Text(
+                              formattedDate,
+                              style: const TextStyle(color: Color(0xFF64748B), fontSize: 11),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          claim.itemTitle,
+                          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppTheme.darkBackground,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Ownership Justification:',
+                                style: TextStyle(color: AppTheme.accentCyan, fontSize: 11, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                claim.justification,
+                                style: const TextStyle(color: Color(0xFFCBD5E1), fontSize: 12, height: 1.4),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-              );
-            },
-          );
-        },
+                  );
+                },
+              ),
       ),
     );
   }

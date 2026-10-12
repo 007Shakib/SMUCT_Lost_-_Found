@@ -1,11 +1,20 @@
-/// Notification Model (ER Diagram: Notification Entity / UC-09, FR-09)
+/// Notification Model
 class NotificationModel {
   final String notificationId;
   final String userId;
   final String message;
   final String type; // 'claim_update', 'post_moderation', 'system'
   final DateTime timestamp;
-  final bool readStatus;
+  bool readStatus;
+
+  String? _customTitle;
+  String? _customBody;
+
+  String get id => notificationId;
+  String get title => _customTitle ?? (type == 'claim_update' ? 'Claim Update' : 'System Alert');
+  String get body => _customBody ?? message;
+  bool get isRead => readStatus;
+  set isRead(bool val) => readStatus = val;
 
   NotificationModel({
     required this.notificationId,
@@ -14,7 +23,14 @@ class NotificationModel {
     required this.type,
     required this.timestamp,
     this.readStatus = false,
-  });
+    String? id,
+    String? title,
+    String? body,
+    bool? isRead,
+  }) : _customTitle = title,
+       _customBody = body {
+    if (isRead != null) readStatus = isRead;
+  }
 
   factory NotificationModel.fromMap(Map<String, dynamic> map, String id) {
     return NotificationModel(

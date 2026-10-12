@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../config/app_theme.dart';
 
-/// Splash Screen with SMUCT Branding
+/// Splash Screen with SMUCT Branding & Tagline
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -22,55 +23,71 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0B0F19),
+      backgroundColor: AppTheme.darkBackground,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 90,
-              height: 90,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF0284C7), Color(0xFF0F2B5C)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Logo Container
+              Container(
+                width: 96,
+                height: 96,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [AppTheme.accentCyan, AppTheme.primaryNavy],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(28),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.accentCyan.withValues(alpha: 0.35),
+                      blurRadius: 24,
+                      spreadRadius: 4,
+                    )
+                  ],
                 ),
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF0284C7).withOpacity(0.4),
-                    blurRadius: 20,
-                    spreadRadius: 2,
-                  )
-                ],
+                child: const Icon(Icons.search_rounded, size: 52, color: Colors.white),
               ),
-              child: const Icon(Icons.search_off_rounded, size: 48, color: Colors.white),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'SMUCT Lost & Found',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: -0.5,
+              const SizedBox(height: 28),
+              const Text(
+                'SMUCT Lost & Found',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: -0.5,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Shanto-Mariam University of Creative Technology',
-              style: TextStyle(fontSize: 12, color: Colors.slateCustom),
-            ),
-            const SizedBox(height: 48),
-            const CircularProgressIndicator(color: Color(0xFF0284C7)),
-          ],
+              const SizedBox(height: 8),
+              const Text(
+                'Find it. Report it. Return it.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppTheme.accentCyan,
+                  letterSpacing: 0.2,
+                ),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'Shanto-Mariam University of Creative Technology',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFF64748B),
+                ),
+              ),
+              const SizedBox(height: 56),
+              const CircularProgressIndicator(color: AppTheme.accentCyan, strokeWidth: 3),
+            ],
+          ),
         ),
       ),
     );
   }
-}
-
-extension on TextStyle {
-  Color get slateCustom => const Color(0xFF94A3B8);
 }
