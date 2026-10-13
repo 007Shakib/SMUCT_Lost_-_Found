@@ -11,7 +11,20 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-slate-900 text-slate-100">
+<body class="bg-slate-900 text-slate-100 is-loading">
+
+  <!-- Full-Screen Initial Loading Screen -->
+  <div id="appLoadingScreen" class="loading-screen" role="status" aria-live="polite" aria-label="Loading Application">
+    <div class="loading-screen-content">
+      <div class="loading-logo-wrapper">
+        <div class="loading-glow-pulse" aria-hidden="true"></div>
+        <img src="assets/logo.png" alt="SMUCT Lost & Found Logo" class="loading-logo" />
+      </div>
+      <div class="loading-animation-wrapper" aria-hidden="true">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- Top Controller Bar for Prototype Viewing -->
   <header class="prototype-bar">

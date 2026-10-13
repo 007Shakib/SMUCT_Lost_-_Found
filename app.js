@@ -130,8 +130,14 @@ const MOCK_DATA = {
   ]
 };
 
+// Initial Loading Screen Target Duration (SRS / Prompt specification: 2.5 seconds)
+const LOADING_SCREEN_DURATION_MS = 2500;
+
 // Application State Engine
 class App {
+  // Configurable loading duration in milliseconds
+  static LOADING_DURATION = LOADING_SCREEN_DURATION_MS;
+
   constructor() {
     this.state = {
       role: 'student', // 'student' or 'admin'
@@ -151,9 +157,33 @@ class App {
   }
 
   init() {
+    this.initLoadingScreen();
     this.updateClock();
     setInterval(() => this.updateClock(), 30000);
     this.render();
+  }
+
+  /**
+   * Initializes the full-screen loading screen on initial app start or reload.
+   * Displays the centered logo and loading animation for 2.5s, then smoothly fades out.
+   */
+  initLoadingScreen() {
+    const loadingScreen = document.getElementById('appLoadingScreen');
+    if (!loadingScreen) return;
+
+    // Prevent background scrolling and interaction while loading screen is active
+    document.body.classList.add('is-loading');
+
+    setTimeout(() => {
+      // Trigger smooth fade-out animation
+      loadingScreen.classList.add('fade-out');
+      document.body.classList.remove('is-loading');
+
+      // Remove from layout after fade-out transition finishes
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
+      }, 500);
+    }, App.LOADING_DURATION);
   }
 
   updateClock() {

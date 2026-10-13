@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../config/app_theme.dart';
 
-/// Splash Screen with SMUCT Branding & Tagline
+/// Minimal Full-Screen Loading Screen displaying only app logo and loading animation
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -9,11 +9,27 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  /// Target duration of 2.5 seconds (2500ms)
+  static const int loadingDurationMs = 2500;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeIn,
+    );
+    _animationController.forward();
+
+    // Loading duration: 2.5 seconds before smooth transition
+    Future.delayed(const Duration(milliseconds: loadingDurationMs), () {
       if (mounted) {
         Navigator.pushReplacementNamed(context, '/login');
       }
@@ -21,69 +37,55 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.darkBackground,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Logo Container
+              // Centered App Logo with subtle glowing shadow
               Container(
-                width: 96,
-                height: 96,
+                width: 130,
+                height: 130,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [AppTheme.accentCyan, AppTheme.primaryNavy],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
                   borderRadius: BorderRadius.circular(28),
                   boxShadow: [
                     BoxShadow(
                       color: AppTheme.accentCyan.withValues(alpha: 0.35),
-                      blurRadius: 24,
+                      blurRadius: 32,
                       spreadRadius: 4,
                     )
                   ],
                 ),
-                child: const Icon(Icons.search_rounded, size: 52, color: Colors.white),
-              ),
-              const SizedBox(height: 28),
-              const Text(
-                'SMUCT Lost & Found',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: -0.5,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(28),
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    width: 130,
+                    height: 130,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text(
-                'Find it. Report it. Return it.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+              const SizedBox(height: 36),
+              // Circular loading spinner beneath logo
+              const SizedBox(
+                width: 36,
+                height: 36,
+                child: CircularProgressIndicator(
                   color: AppTheme.accentCyan,
-                  letterSpacing: 0.2,
+                  strokeWidth: 3,
                 ),
               ),
-              const SizedBox(height: 6),
-              const Text(
-                'Shanto-Mariam University of Creative Technology',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFF64748B),
-                ),
-              ),
-              const SizedBox(height: 56),
-              const CircularProgressIndicator(color: AppTheme.accentCyan, strokeWidth: 3),
             ],
           ),
         ),
