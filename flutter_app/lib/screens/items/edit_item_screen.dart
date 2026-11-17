@@ -87,7 +87,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
     if (_item == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Edit Item')),
-        body: const Center(child: Text('Item not found', style: TextStyle(color: Colors.white))),
+        body: const Center(child: Text('Item not found', style: TextStyle(color: AppTheme.textMain))),
       );
     }
 
@@ -120,12 +120,12 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Category', style: TextStyle(color: Color(0xFFCBD5E1), fontSize: 13, fontWeight: FontWeight.w600)),
+                    const Text('Category', style: TextStyle(color: Color(0xFF334155), fontSize: 13, fontWeight: FontWeight.w600)),
                     const SizedBox(height: 6),
                     DropdownButtonFormField<String>(
-                      value: MockData.categories.any((c) => c.name == _selectedCategory) ? _selectedCategory : 'Electronics',
+                      initialValue: MockData.categories.any((c) => c.name == _selectedCategory) ? _selectedCategory : 'Electronics',
                       dropdownColor: AppTheme.cardSurface,
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                      style: const TextStyle(color: Colors.black, fontSize: 14),
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: AppTheme.cardSurface,

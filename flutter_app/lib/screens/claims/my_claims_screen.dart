@@ -64,14 +64,15 @@ class _MyClaimsScreenState extends State<MyClaimsScreen> {
                         const SizedBox(height: 12),
                         Text(
                           claim.itemTitle,
-                          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(color: AppTheme.textMain, fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: AppTheme.darkBackground,
+                            color: const Color(0xFFF8FAFC),
                             borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: const Color(0xFFE2E8F0)),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +84,7 @@ class _MyClaimsScreenState extends State<MyClaimsScreen> {
                               const SizedBox(height: 4),
                               Text(
                                 claim.justification,
-                                style: const TextStyle(color: Color(0xFFCBD5E1), fontSize: 12, height: 1.4),
+                                style: const TextStyle(color: Color(0xFF334155), fontSize: 12, height: 1.4),
                               ),
                             ],
                           ),

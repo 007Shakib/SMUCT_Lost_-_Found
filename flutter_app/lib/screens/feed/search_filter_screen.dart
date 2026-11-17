@@ -348,10 +348,14 @@ class _SearchFilterScreenState extends State<SearchFilterScreen> {
         ),
         title: Row(
           children: [
-            CircleAvatar(
-              radius: 16,
-              backgroundColor: const Color(0xFFE0F2FE),
-              child: const Icon(Icons.shield_rounded, size: 18, color: Color(0xFF0284C7)),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                'assets/images/app_logo.png',
+                width: 32,
+                height: 32,
+                fit: BoxFit.contain,
+              ),
             ),
             const SizedBox(width: 10),
             Column(

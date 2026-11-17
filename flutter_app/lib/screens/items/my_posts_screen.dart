@@ -40,15 +40,15 @@ class _MyPostsScreenState extends State<MyPostsScreen> with SingleTickerProvider
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.cardSurface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Delete Post?', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text('Delete Post?', style: TextStyle(color: AppTheme.textMain, fontWeight: FontWeight.bold)),
         content: Text(
           'Are you sure you want to delete "${item.title}"? This action cannot be undone.',
-          style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+          style: const TextStyle(color: AppTheme.textMuted, fontSize: 13),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(color: Color(0xFF94A3B8))),
+            child: const Text('Cancel', style: TextStyle(color: AppTheme.textMuted)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppTheme.statusLost),

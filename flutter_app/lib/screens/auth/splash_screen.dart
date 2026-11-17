@@ -71,10 +71,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             children: [
               // Centered App Logo with subtle glowing shadow
               Container(
-                width: 130,
-                height: 130,
+                width: 150,
+                height: 150,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(28),
+                  borderRadius: BorderRadius.circular(32),
                   boxShadow: [
                     BoxShadow(
                       color: AppTheme.accentCyan.withValues(alpha: 0.35),
@@ -84,11 +84,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(28),
+                  borderRadius: BorderRadius.circular(32),
                   child: Image.asset(
-                    'assets/images/logo.png',
-                    width: 130,
-                    height: 130,
+                    'assets/images/app_logo.png',
+                    width: 150,
+                    height: 150,
                     fit: BoxFit.contain,
                   ),
                 ),

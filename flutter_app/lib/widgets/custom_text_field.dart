@@ -38,7 +38,7 @@ class CustomTextField extends StatelessWidget {
         Text(
           label,
           style: const TextStyle(
-            color: Color(0xFFCBD5E1),
+            color: Color(0xFF334155),
             fontSize: 13,
             fontWeight: FontWeight.w600,
           ),
@@ -52,10 +52,10 @@ class CustomTextField extends StatelessWidget {
           readOnly: readOnly,
           onTap: onTap,
           validator: validator,
-          style: const TextStyle(color: Colors.white, fontSize: 14),
+          style: const TextStyle(color: Colors.black, fontSize: 14),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 14),
+            hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
             prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: const Color(0xFF94A3B8), size: 20) : null,
             suffixIcon: suffixIcon,
             filled: true,
@@ -76,6 +76,10 @@ class CustomTextField extends StatelessWidget {
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: AppTheme.statusLost),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: AppTheme.accentCyan, width: 1.5),
             ),
           ),
         ),

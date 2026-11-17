@@ -50,14 +50,14 @@ class _SubmitClaimScreenState extends State<SubmitClaimScreen> {
                 SizedBox(height: 12),
                 Text(
                   'Claim Submitted',
-                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: AppTheme.textMain, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             content: const Text(
               'Your claim is waiting for administrator review. You will receive a notification once verified.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13, height: 1.4),
+              style: TextStyle(color: AppTheme.textMuted, fontSize: 13, height: 1.4),
             ),
             actions: [
               CustomButton(
@@ -81,7 +81,7 @@ class _SubmitClaimScreenState extends State<SubmitClaimScreen> {
     if (item == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Submit Claim')),
-        body: const Center(child: Text('Invalid item selected.', style: TextStyle(color: Colors.white))),
+        body: const Center(child: Text('Invalid item selected.', style: TextStyle(color: AppTheme.textMain))),
       );
     }
 
@@ -131,7 +131,7 @@ class _SubmitClaimScreenState extends State<SubmitClaimScreen> {
                           children: [
                             Text(
                               item.title,
-                              style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+                              style: const TextStyle(color: AppTheme.textMain, fontSize: 15, fontWeight: FontWeight.bold),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -153,12 +153,12 @@ class _SubmitClaimScreenState extends State<SubmitClaimScreen> {
                 // Question Prompt
                 const Text(
                   'Why do you believe this item belongs to you?',
-                  style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: AppTheme.textMain, fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 6),
                 const Text(
                   'Describe unique identifiers, markings, lock codes, contents, or serial numbers that prove ownership.',
-                  style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13, height: 1.4),
+                  style: TextStyle(color: AppTheme.textMuted, fontSize: 13, height: 1.4),
                 ),
                 const SizedBox(height: 16),
 

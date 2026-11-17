@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../config/app_theme.dart';
 import '../../models/item_model.dart';
 import '../../widgets/custom_button.dart';
 
@@ -48,10 +49,14 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircleAvatar(
-              radius: 14,
-              backgroundColor: const Color(0xFFE0F2FE),
-              child: const Icon(Icons.shield_rounded, size: 16, color: Color(0xFF0284C7)),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                'assets/images/app_logo.png',
+                width: 28,
+                height: 28,
+                fit: BoxFit.contain,
+              ),
             ),
             const SizedBox(width: 8),
             Text(
@@ -64,10 +69,14 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
-            child: CircleAvatar(
-              radius: 14,
-              backgroundColor: const Color(0xFFE0F2FE),
-              child: const Icon(Icons.shield_outlined, size: 14, color: Color(0xFF0284C7)),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                'assets/images/app_logo.png',
+                width: 28,
+                height: 28,
+                fit: BoxFit.contain,
+              ),
             ),
           )
         ],
@@ -422,15 +431,16 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                           TextField(
                             controller: _claimDescriptionController,
                             maxLines: 3,
-                            style: GoogleFonts.inter(color: const Color(0xFF0F172A), fontSize: 12),
+                            style: GoogleFonts.inter(color: Colors.black, fontSize: 12),
                             decoration: InputDecoration(
                               hintText: "e.g. Case has small scratch on bottom hinge, device is named 'Sam's AirPods'...",
-                              hintStyle: GoogleFonts.inter(color: const Color(0xFF94A3B8), fontSize: 11),
+                              hintStyle: GoogleFonts.inter(color: Colors.grey, fontSize: 11),
                               filled: true,
                               fillColor: const Color(0xFFF8FAFC),
                               contentPadding: const EdgeInsets.all(12),
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Color(0xFFE2E8F0))),
                               enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Color(0xFFE2E8F0))),
+                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppTheme.accentCyan, width: 1.5)),
                             ),
                           ),
                           const SizedBox(height: 14),

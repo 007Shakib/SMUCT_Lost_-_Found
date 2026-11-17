@@ -90,7 +90,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           Text(
                             notif.title,
                             style: TextStyle(
-                              color: Colors.white,
+                              color: AppTheme.textMain,
                               fontSize: 14,
                               fontWeight: notif.isRead ? FontWeight.w600 : FontWeight.bold,
                             ),
@@ -106,7 +106,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         child: Text(
                           notif.body,
                           style: TextStyle(
-                            color: notif.isRead ? const Color(0xFF94A3B8) : const Color(0xFFCBD5E1),
+                            color: notif.isRead ? AppTheme.textMuted : const Color(0xFF334155),
                             fontSize: 12,
                             height: 1.3,
                           ),

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../config/app_theme.dart';
 import '../../mock/mock_data.dart';
 import '../../models/item_model.dart';
+import '../../widgets/app_drawer.dart';
 import '../../widgets/category_chip.dart';
 import '../../widgets/custom_search_bar.dart';
 import '../../widgets/empty_state.dart';
@@ -17,6 +18,7 @@ class HomeFeedScreen extends StatefulWidget {
 }
 
 class _HomeFeedScreenState extends State<HomeFeedScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _selectedCategory = 'All';
   String _statusFilter = 'All'; // 'All', 'Lost', 'Found'
 
@@ -36,6 +38,8 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
     final filtered = _filteredItems;
 
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: const AppDrawer(),
       backgroundColor: AppTheme.lightBackground,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -49,19 +53,32 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        width: 38,
-                        height: 38,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF0284C7), Color(0xFF0F2B5C)],
+                      // App Logo in Header (taps to open navigation drawer)
+                      GestureDetector(
+                        onTap: () => _scaffoldKey.currentState?.openDrawer(),
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF0284C7).withValues(alpha: 0.18),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: const [
-                            BoxShadow(color: Color(0x330284C7), blurRadius: 8, offset: Offset(0, 3)),
-                          ],
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.asset(
+                              'assets/images/app_logo.png',
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
                         ),
-                        child: const Icon(Icons.shield_outlined, color: Colors.white, size: 20),
                       ),
                       const SizedBox(width: 10),
                       Column(
@@ -91,6 +108,11 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
 
                   Row(
                     children: [
+                      IconButton(
+                        tooltip: 'Open Menu',
+                        icon: const Icon(Icons.menu_rounded, color: AppTheme.textMain, size: 24),
+                        onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                      ),
                       IconButton(
                         tooltip: 'Admin Console',
                         icon: const Icon(Icons.admin_panel_settings_rounded, color: AppTheme.accentCyan, size: 22),

@@ -107,10 +107,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: [Color(0xFF0284C7), Color(0xFF0F2B5C)]),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF0284C7).withValues(alpha: 0.15),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
-              child: const Icon(Icons.shield_outlined, color: Colors.white, size: 16),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.asset(
+                  'assets/images/app_logo.png',
+                  width: 32,
+                  height: 32,
+                  fit: BoxFit.contain,
+                ),
+              ),
             ),
           ),
         ],
@@ -353,12 +367,79 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               const SizedBox(height: 24),
 
-              Center(
-                child: Text(
-                  'SMUCT LOST & FOUND PORTAL • V2.4.1',
-                  style: GoogleFonts.outfit(color: AppTheme.textSubtle, fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 0.8),
+              // About Section displaying the logo alongside application name
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: AppTheme.borderSubtle),
+                  boxShadow: const [
+                    BoxShadow(color: Color(0x06000000), blurRadius: 10, offset: Offset(0, 3)),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF0284C7).withValues(alpha: 0.15),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(14),
+                        child: Image.asset(
+                          'assets/images/app_logo.png',
+                          width: 52,
+                          height: 52,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'SMUCT Lost & Found Portal',
+                            style: GoogleFonts.outfit(
+                              color: AppTheme.textMain,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Version 2.4.1 • Campus Recovery',
+                            style: GoogleFonts.inter(
+                              color: AppTheme.accentCyan,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Shanto-Mariam University of Creative Technology',
+                            style: GoogleFonts.inter(
+                              color: AppTheme.textSubtle,
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
               const SizedBox(height: 20),
             ],
           ),

@@ -30,11 +30,11 @@ class StatisticCard extends StatelessWidget {
           color: AppTheme.cardSurface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppTheme.borderSubtle, width: 1),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: Color(0x0A000000),
+              blurRadius: 12,
+              offset: Offset(0, 4),
             ),
           ],
         ),
@@ -48,23 +48,16 @@ class StatisticCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: accentColor.withValues(alpha: 0.15),
+                    color: accentColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: accentColor.withValues(alpha: 0.3), width: 1),
-                    boxShadow: [
-                      BoxShadow(
-                        color: accentColor.withValues(alpha: 0.2),
-                        blurRadius: 8,
-                        spreadRadius: 1,
-                      ),
-                    ],
+                    border: Border.all(color: accentColor.withValues(alpha: 0.25), width: 1),
                   ),
                   child: Icon(icon, color: accentColor, size: 22),
                 ),
                 Text(
                   value,
                   style: GoogleFonts.outfit(
-                    color: Colors.white,
+                    color: AppTheme.textMain,
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
                   ),
@@ -75,7 +68,7 @@ class StatisticCard extends StatelessWidget {
             Text(
               title,
               style: GoogleFonts.inter(
-                color: const Color(0xFF94A3B8),
+                color: AppTheme.textMuted,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),

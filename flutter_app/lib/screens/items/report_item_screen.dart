@@ -122,10 +122,14 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircleAvatar(
-              radius: 14,
-              backgroundColor: const Color(0xFFE0F2FE),
-              child: const Icon(Icons.shield_rounded, size: 16, color: Color(0xFF0284C7)),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                'assets/images/app_logo.png',
+                width: 28,
+                height: 28,
+                fit: BoxFit.contain,
+              ),
             ),
             const SizedBox(width: 8),
             Text(

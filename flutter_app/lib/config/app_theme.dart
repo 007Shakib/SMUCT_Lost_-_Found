@@ -85,8 +85,8 @@ class AppTheme {
         titleLarge: GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.w700, color: textMain),
         titleMedium: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w600, color: textMain),
         titleSmall: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w600, color: textMain),
-        bodyLarge: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w400, color: textMain),
-        bodyMedium: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w400, color: textMuted),
+        bodyLarge: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black),
+        bodyMedium: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w400, color: Colors.black),
         bodySmall: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w400, color: textSubtle),
       ),
       appBarTheme: AppBarTheme(
@@ -108,11 +108,31 @@ class AppTheme {
           side: const BorderSide(color: borderSubtle, width: 1),
         ),
       ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: Colors.white,
+        elevation: 6,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        titleTextStyle: GoogleFonts.outfit(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: textMain,
+        ),
+        contentTextStyle: GoogleFonts.inter(
+          fontSize: 13,
+          color: textMuted,
+          height: 1.4,
+        ),
+      ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        contentTextStyle: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.white),
+      ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: const Color(0xFFF1F5F9),
-        hintStyle: GoogleFonts.inter(color: textSubtle, fontSize: 14),
-        labelStyle: GoogleFonts.inter(color: textMuted, fontSize: 14),
+        hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
+        labelStyle: const TextStyle(color: Colors.grey, fontSize: 14),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
@@ -123,6 +143,14 @@ class AppTheme {
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: accentCyan, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: statusLost),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: accentCyan, width: 1.5),
         ),

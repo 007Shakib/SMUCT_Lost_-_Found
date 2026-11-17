@@ -41,10 +41,10 @@ class CustomSearchBar extends StatelessWidget {
         readOnly: readOnly,
         onTap: onTap,
         onChanged: onChanged,
-        style: GoogleFonts.inter(color: AppTheme.textMain, fontSize: 14, fontWeight: FontWeight.w500),
+        style: GoogleFonts.inter(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: GoogleFonts.inter(color: AppTheme.textSubtle, fontSize: 14),
+          hintStyle: GoogleFonts.inter(color: Colors.grey, fontSize: 14),
           prefixIcon: const Icon(Icons.search_rounded, color: AppTheme.textSubtle, size: 22),
           suffixIcon: Row(
             mainAxisSize: MainAxisSize.min,

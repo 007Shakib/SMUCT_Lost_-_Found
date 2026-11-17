@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../config/app_theme.dart';
 
 /// Reusable Empty State Widget
@@ -39,8 +40,8 @@ class EmptyState extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
+              style: GoogleFonts.outfit(
+                color: AppTheme.textMain,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -49,8 +50,8 @@ class EmptyState extends StatelessWidget {
             Text(
               description,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Color(0xFF94A3B8),
+              style: GoogleFonts.inter(
+                color: AppTheme.textMuted,
                 fontSize: 13,
                 height: 1.4,
               ),

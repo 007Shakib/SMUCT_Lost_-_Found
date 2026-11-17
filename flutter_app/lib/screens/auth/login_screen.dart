@@ -113,13 +113,14 @@ class _LoginScreenState extends State<LoginScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFF0284C7), width: 1.5),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                'assets/images/app_logo.png',
+                width: 28,
+                height: 28,
+                fit: BoxFit.contain,
               ),
-              child: const Icon(Icons.shield_outlined, size: 16, color: Color(0xFF0284C7)),
             ),
           )
         ],
@@ -147,36 +148,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      // Logo Badge
+                      // App Logo
                       Stack(
                         alignment: Alignment.bottomRight,
                         children: [
                           Container(
-                            width: 68,
-                            height: 68,
+                            width: 76,
+                            height: 76,
                             decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFFE0F2FE), Color(0xFFBAE6FD)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: const Color(0xFF38BDF8), width: 1.5),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0xFF0284C7).withValues(alpha: 0.15),
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                             ),
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(Icons.shield_rounded, size: 28, color: Color(0xFF0284C7)),
-                                  Text(
-                                    'L & F',
-                                    style: GoogleFonts.outfit(
-                                      color: const Color(0xFF0369A1),
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w900,
-                                    ),
-                                  ),
-                                ],
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                'assets/images/app_logo.png',
+                                width: 76,
+                                height: 76,
+                                fit: BoxFit.contain,
                               ),
                             ),
                           ),
