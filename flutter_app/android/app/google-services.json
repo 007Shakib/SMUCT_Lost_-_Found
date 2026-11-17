@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "105273789414",
+    "project_id": "smuct-lost-and-found",
+    "storage_bucket": "smuct-lost-and-found.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105273789414:android:78e02ecd72d86507d72427",
+        "android_client_info": {
+          "package_name": "org.smuct.lostandfound"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAB53bsyy5_yjVv5_HLPXlMznHF-6cd9ac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

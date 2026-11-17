@@ -5,6 +5,7 @@ void main() {
   testWidgets('App smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const SmuctLostAndFoundApp());
+    await tester.pumpAndSettle();
     expect(find.byType(SmuctLostAndFoundApp), findsOneWidget);
   });
 }
