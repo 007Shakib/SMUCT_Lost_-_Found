@@ -33,7 +33,33 @@ class _LoginScreenState extends State<LoginScreen> {
 
         if (mounted) {
           setState(() => _isLoading = false);
-          if (_emailController.text.toLowerCase().contains('admin')) {
+          final user = AuthService().currentUser;
+
+          if (!AuthService().isEmailVerified) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Email unverified. Check your inbox for the link.'),
+                backgroundColor: const Color(0xFFF59E0B),
+                duration: const Duration(seconds: 5),
+                action: SnackBarAction(
+                  label: 'Resend',
+                  textColor: Colors.white,
+                  onPressed: () async {
+                    try {
+                      await AuthService().sendEmailVerification();
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Verification email resent!')),
+                        );
+                      }
+                    } catch (_) {}
+                  },
+                ),
+              ),
+            );
+          }
+
+          if (user?.role == 'Admin') {
             Navigator.pushReplacementNamed(context, '/admin');
           } else {
             Navigator.pushReplacementNamed(context, '/home');

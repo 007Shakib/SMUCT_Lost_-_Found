@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../config/app_routes.dart';
 import '../../config/app_theme.dart';
+import '../../services/auth_service.dart';
 
 /// Minimal Full-Screen Loading Screen displaying only app logo and loading animation
 class SplashScreen extends StatefulWidget {
@@ -29,9 +31,24 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     _animationController.forward();
 
     // Loading duration: 2.5 seconds before smooth transition
-    Future.delayed(const Duration(milliseconds: loadingDurationMs), () {
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/login');
+    Future.delayed(const Duration(milliseconds: loadingDurationMs), () async {
+      if (!mounted) return;
+      try {
+        final user = await AuthService().loadCurrentUserProfile();
+        if (!mounted) return;
+        if (user != null) {
+          if (user.role == 'Admin') {
+            Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
+          } else {
+            Navigator.pushReplacementNamed(context, AppRoutes.home);
+          }
+        } else {
+          Navigator.pushReplacementNamed(context, AppRoutes.login);
+        }
+      } catch (_) {
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, AppRoutes.login);
+        }
       }
     });
   }

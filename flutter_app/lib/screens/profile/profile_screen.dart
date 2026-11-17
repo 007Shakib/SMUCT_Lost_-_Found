@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../config/app_theme.dart';
 import '../../mock/mock_data.dart';
+import '../../services/auth_service.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 
@@ -342,7 +343,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 iconColor: const Color(0xFFEF4444),
                 title: 'Sign Out',
                 titleColor: const Color(0xFFEF4444),
-                onTap: () => Navigator.pushReplacementNamed(context, '/login'),
+                onTap: () async {
+                  await AuthService().signOut();
+                  if (context.mounted) {
+                    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                  }
+                },
               ),
 
               const SizedBox(height: 24),

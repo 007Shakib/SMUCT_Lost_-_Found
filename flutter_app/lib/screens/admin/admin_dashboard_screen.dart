@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../mock/mock_data.dart';
 import '../../services/admin_service.dart';
+import '../../services/auth_service.dart';
 
 /// Admin Dashboard Screen conforming strictly to SMUCT Admin Console Figma Design
 class AdminDashboardScreen extends StatefulWidget {
@@ -20,6 +21,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> with Single
   void initState() {
     super.initState();
     _adminService.addListener(_onServiceUpdate);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!AuthService().isAdmin) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Access Denied: Administrator role required.'),
+            backgroundColor: Color(0xFFEF4444),
+          ),
+        );
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    });
   }
 
   @override

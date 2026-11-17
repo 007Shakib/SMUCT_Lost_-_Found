@@ -25,6 +25,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscureConfirmPassword = true;
   bool _agreedToTerms = true;
   bool _isLoading = false;
+  String _selectedRole = 'Student';
 
   void _handleRegister() async {
     if (_formKey.currentState!.validate()) {
@@ -40,15 +41,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
           name: _nameController.text.trim(),
           email: _emailController.text.trim(),
           password: _passwordController.text,
-          role: 'Student',
+          role: _selectedRole,
           studentId: _idController.text.trim(),
         );
         if (mounted) {
           setState(() => _isLoading = false);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Account created successfully! Please login.'),
-              backgroundColor: Color(0xFF10B981),
+            SnackBar(
+              content: Text(
+                'Account created! A verification email was sent to ${_emailController.text.trim()}. Please verify your email before logging in.',
+              ),
+              backgroundColor: const Color(0xFF10B981),
+              duration: const Duration(seconds: 5),
             ),
           );
           Navigator.pop(context);
@@ -205,7 +209,86 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           color: const Color(0xFF64748B),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 18),
+
+                      // Role Segmented Selector: Student vs Faculty/Staff (Admin role is restricted)
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF1F5F9),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: const Color(0xFFE2E8F0)),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => setState(() => _selectedRole = 'Student'),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 9),
+                                  decoration: BoxDecoration(
+                                    color: _selectedRole == 'Student' ? Colors.white : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: _selectedRole == 'Student'
+                                        ? const [BoxShadow(color: Color(0x10000000), blurRadius: 4, offset: Offset(0, 2))]
+                                        : null,
+                                  ),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.school_outlined, size: 15, color: _selectedRole == 'Student' ? const Color(0xFF0284C7) : const Color(0xFF64748B)),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          'Student',
+                                          style: GoogleFonts.outfit(
+                                            color: _selectedRole == 'Student' ? const Color(0xFF0F172A) : const Color(0xFF64748B),
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => setState(() => _selectedRole = 'Teacher & Staff'),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 9),
+                                  decoration: BoxDecoration(
+                                    color: _selectedRole == 'Teacher & Staff' ? Colors.white : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: _selectedRole == 'Teacher & Staff'
+                                        ? const [BoxShadow(color: Color(0x10000000), blurRadius: 4, offset: Offset(0, 2))]
+                                        : null,
+                                  ),
+                                  child: Center(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.badge_outlined, size: 15, color: _selectedRole == 'Teacher & Staff' ? const Color(0xFF0284C7) : const Color(0xFF64748B)),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          'Faculty / Staff',
+                                          style: GoogleFonts.outfit(
+                                            color: _selectedRole == 'Teacher & Staff' ? const Color(0xFF0F172A) : const Color(0xFF64748B),
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 18),
 
                       // Full Name
                       CustomTextField(
