@@ -1,6 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Internet access: required for Firebase, Supabase, and image loading -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Camera: required for image_picker photo capture -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- Media/Photo access: required for image_picker gallery selection -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <!-- Legacy external storage for Android < 13 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+    <!-- Firebase Cloud Messaging (push notifications) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- Network state check (optional but useful for offline detection) -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
     <application
-        android:label="smuct_lost_and_found"
+        android:label="SMUCT Lost &amp; Found"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

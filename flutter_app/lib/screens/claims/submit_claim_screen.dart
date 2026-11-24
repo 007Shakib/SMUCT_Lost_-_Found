@@ -44,8 +44,8 @@ class _SubmitClaimScreenState extends State<SubmitClaimScreen> {
           builder: (ctx) => AlertDialog(
             backgroundColor: AppTheme.cardSurface,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            title: Column(
-              children: const [
+            title: const Column(
+              children: [
                 Icon(Icons.hourglass_top_rounded, color: AppTheme.statusPending, size: 52),
                 SizedBox(height: 12),
                 Text(

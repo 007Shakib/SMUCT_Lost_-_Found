@@ -19,11 +19,11 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
   final _descriptionController = TextEditingController(
     text: 'Small sticker of SMUCT Robotics club on the cap. A subtle dent on the bottom stainless rim.',
   );
-  String _location = 'Central Library, 2nd Floor Quiet Zone';
+  final String _location = 'Central Library, 2nd Floor Quiet Zone';
 
   String _status = 'Lost Item'; // 'Lost Item' or 'Found Item'
   String _selectedCategory = 'Accessories';
-  DateTime _selectedDate = DateTime.now();
+  final DateTime _selectedDate = DateTime.now();
   final List<String> _photos = [
     'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600',
     'https://images.unsplash.com/photo-1544717305-2782549b5136?w=600',
@@ -261,8 +261,8 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
                             children: [
                               Container(
                                 padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFE0F2FE),
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFFE0F2FE),
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(Icons.add_a_photo_outlined, size: 18, color: Color(0xFF0284C7)),

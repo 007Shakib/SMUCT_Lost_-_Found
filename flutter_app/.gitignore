@@ -12,15 +12,16 @@
 .swiftpm/
 migrate_working_dir/
 
+# VS Code workspace files accidentally placed in source directories
+*.code-workspace
+
 # IntelliJ related
 *.iml
 *.ipr
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
+# VS Code — keep commented out unless you want to ignore launch config
 #.vscode/
 
 # Flutter/Dart/Pub related
@@ -28,6 +29,7 @@ migrate_working_dir/
 **/ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins-dependencies
+.flutter-plugins
 .pub-cache/
 .pub/
 /build/
@@ -44,5 +46,14 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Android Gradle caches
+/android/.gradle/
+
 # Widget Preview related
 .widget_preview/
+
+# Environment / secrets
+.env
+.env.local
+*.env
+

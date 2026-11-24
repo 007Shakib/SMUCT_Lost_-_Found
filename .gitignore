@@ -4,6 +4,7 @@
 *.iml
 *.iws
 *.ipr
+*.code-workspace
 
 # OS files
 .DS_Store
@@ -15,6 +16,8 @@ build/
 .packages
 .pub/
 .pub-cache/
+.flutter-plugins-dependencies
+.flutter-plugins
 
 # Node / Web artifacts
 node_modules/
@@ -22,3 +25,13 @@ node_modules/
 # Android / Gradle artifacts
 .gradle/
 local.properties
+
+# Firebase local configs (keep google-services.json committed — it is safe)
+# Supabase / environment secrets
+.env
+.env.local
+*.env
+
+# Dart/Flutter generated files
+*.g.dart
+*.freezed.dart

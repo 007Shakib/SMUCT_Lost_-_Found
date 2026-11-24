@@ -146,10 +146,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                             ),
                           ),
                           const SizedBox(width: 8),
-                          CircleAvatar(
+                          const CircleAvatar(
                             radius: 16,
                             backgroundColor: Colors.white,
-                            child: const Icon(Icons.ios_share, size: 16, color: Color(0xFF0F172A)),
+                            child: Icon(Icons.ios_share, size: 16, color: Color(0xFF0F172A)),
                           ),
                         ],
                       ),
@@ -460,7 +460,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                               children: [
                                 Container(
                                   padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(color: const Color(0xFFE0F2FE), shape: BoxShape.circle),
+                                  decoration: const BoxDecoration(color: Color(0xFFE0F2FE), shape: BoxShape.circle),
                                   child: const Icon(Icons.add_a_photo_outlined, color: Color(0xFF0284C7), size: 20),
                                 ),
                                 const SizedBox(height: 6),
@@ -476,7 +476,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                             children: [
                               Container(
                                 padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(color: const Color(0xFFF1F5F9), shape: BoxShape.circle),
+                                decoration: const BoxDecoration(color: Color(0xFFF1F5F9), shape: BoxShape.circle),
                                 child: const Icon(Icons.help_outline_rounded, color: Color(0xFF64748B), size: 18),
                               ),
                               const SizedBox(width: 10),
