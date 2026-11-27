@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../mock/mock_data.dart';
+import '../../config/firebase_config.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/google_sign_in_button.dart';
 
 /// Login Screen matching SMUCT Figma visual specification
 class LoginScreen extends StatefulWidget {
@@ -20,7 +21,66 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
   String _selectedRole = 'Student';
+
+  @override
+  void initState() {
+    super.initState();
+    _ensureFirebaseReady();
+  }
+
+  void _ensureFirebaseReady() async {
+    try {
+      if (!FirebaseConfig.isInitialized) {
+        await FirebaseConfig.initialize();
+      }
+    } catch (e) {
+      debugPrint('LoginScreen: Firebase init notice: $e');
+    }
+  }
+
+  void _handleGoogleSignIn() async {
+    setState(() => _isGoogleLoading = true);
+    try {
+      final user = await AuthService().signInWithGoogle();
+      if (!mounted) return;
+      setState(() => _isGoogleLoading = false);
+
+      if (user == null) {
+        // User dismissed/canceled the account chooser
+        return;
+      }
+
+      if (user.role == 'Admin') {
+        Navigator.pushReplacementNamed(context, '/admin');
+      } else {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        setState(() => _isGoogleLoading = false);
+        final errorMsg = AuthService.getErrorMessage(e);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMsg),
+            backgroundColor: Colors.redAccent,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isGoogleLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Google Sign-In failed: $e'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+    }
+  }
 
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
@@ -424,13 +484,39 @@ class _LoginScreenState extends State<LoginScreen> {
                         isLoading: _isLoading,
                         onPressed: _handleLogin,
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 12),
 
-                      // Direct Campus Admin Console Access Button
+                      // Continue with Google Button
+                      Row(
+                        children: [
+                          const Expanded(child: Divider(color: Color(0xFFE2E8F0), thickness: 1)),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Text(
+                              'OR',
+                              style: GoogleFonts.outfit(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF94A3B8),
+                              ),
+                            ),
+                          ),
+                          const Expanded(child: Divider(color: Color(0xFFE2E8F0), thickness: 1)),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+
+                      GoogleSignInButton(
+                        isLoading: _isGoogleLoading,
+                        onPressed: (_isLoading || _isGoogleLoading) ? null : _handleGoogleSignIn,
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Direct Campus Admin Console Fill Button
                       OutlinedButton.icon(
                         icon: const Icon(Icons.admin_panel_settings_rounded, size: 18, color: Color(0xFF0284C7)),
                         label: Text(
-                          'Quick Access: Campus Admin Console 🛡️',
+                          'Fill Admin Credentials (admin@smuct.edu.bd) 🛡️',
                           style: GoogleFonts.outfit(color: const Color(0xFF0284C7), fontWeight: FontWeight.w700, fontSize: 13),
                         ),
                         style: OutlinedButton.styleFrom(
@@ -441,8 +527,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           minimumSize: const Size(double.infinity, 44),
                         ),
                         onPressed: () {
-                          MockData.currentUser = MockData.users.firstWhere((u) => u.role == 'Admin');
-                          Navigator.pushReplacementNamed(context, '/admin');
+                          setState(() {
+                            _selectedRole = 'Admin';
+                            _emailController.text = 'admin@smuct.edu.bd';
+                            _passwordController.text = 'admin123';
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Admin credentials entered. Press Log In to authenticate.')),
+                          );
                         },
                       ),
                       const SizedBox(height: 14),

@@ -296,27 +296,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 20),
 
               // CAMPUS ADMIN PORTAL Section
-              Text(
-                'ADMINISTRATION & GOVERNANCE',
-                style: GoogleFonts.outfit(color: AppTheme.textSubtle, fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 0.8),
-              ),
-              const SizedBox(height: 10),
+              if (AuthService().isAdmin) ...[
+                Text(
+                  'ADMINISTRATION & GOVERNANCE',
+                  style: GoogleFonts.outfit(color: AppTheme.textSubtle, fontSize: 11, fontWeight: FontWeight.w800, letterSpacing: 0.8),
+                ),
+                const SizedBox(height: 10),
 
-              _buildFigmaTile(
-                icon: Icons.admin_panel_settings_rounded,
-                iconBg: const Color(0xFFE0F2FE),
-                iconColor: const Color(0xFF0284C7),
-                title: 'Admin Console',
-                subtitle: 'Adjudication, Flagged Moderation & Metrics',
-                badgeText: 'Super Admin',
-                badgeColor: const Color(0xFF0284C7),
-                onTap: () {
-                  MockData.currentUser = MockData.users.firstWhere((u) => u.role == 'Admin');
-                  Navigator.pushNamed(context, '/admin');
-                },
-              ),
-
-              const SizedBox(height: 20),
+                _buildFigmaTile(
+                  icon: Icons.admin_panel_settings_rounded,
+                  iconBg: const Color(0xFFE0F2FE),
+                  iconColor: const Color(0xFF0284C7),
+                  title: 'Admin Console',
+                  subtitle: 'Adjudication, Flagged Moderation & Metrics',
+                  badgeText: 'Admin',
+                  badgeColor: const Color(0xFF0284C7),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/admin');
+                  },
+                ),
+                const SizedBox(height: 20),
+              ],
 
               // ACCOUNT & SAFETY Section
               Text(

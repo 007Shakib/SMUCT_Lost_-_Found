@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../config/app_theme.dart';
 import '../../mock/mock_data.dart';
 import '../../models/item_model.dart';
+import '../../services/auth_service.dart';
 import '../../widgets/app_drawer.dart';
 import '../../widgets/category_chip.dart';
 import '../../widgets/custom_search_bar.dart';
@@ -113,14 +114,14 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                         icon: const Icon(Icons.menu_rounded, color: AppTheme.textMain, size: 24),
                         onPressed: () => _scaffoldKey.currentState?.openDrawer(),
                       ),
-                      IconButton(
-                        tooltip: 'Admin Console',
-                        icon: const Icon(Icons.admin_panel_settings_rounded, color: AppTheme.accentCyan, size: 22),
-                        onPressed: () {
-                          MockData.currentUser = MockData.users.firstWhere((u) => u.role == 'Admin');
-                          Navigator.pushNamed(context, '/admin');
-                        },
-                      ),
+                      if (AuthService().isAdmin)
+                        IconButton(
+                          tooltip: 'Admin Console',
+                          icon: const Icon(Icons.admin_panel_settings_rounded, color: AppTheme.accentCyan, size: 22),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/admin');
+                          },
+                        ),
                       IconButton(
                         icon: const Icon(Icons.notifications_none_rounded, color: AppTheme.textMain, size: 24),
                         onPressed: () => Navigator.pushNamed(context, '/notifications'),

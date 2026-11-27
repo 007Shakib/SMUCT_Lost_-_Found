@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../config/firebase_config.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/google_sign_in_button.dart';
 
 /// Sign Up / Register Screen matching SMUCT Figma visual specification
 class RegisterScreen extends StatefulWidget {
@@ -25,7 +27,66 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscureConfirmPassword = true;
   bool _agreedToTerms = true;
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
   String _selectedRole = 'Student';
+
+  @override
+  void initState() {
+    super.initState();
+    _ensureFirebaseReady();
+  }
+
+  void _ensureFirebaseReady() async {
+    try {
+      if (!FirebaseConfig.isInitialized) {
+        await FirebaseConfig.initialize();
+      }
+    } catch (e) {
+      debugPrint('RegisterScreen: Firebase init notice: $e');
+    }
+  }
+
+  void _handleGoogleSignIn() async {
+    setState(() => _isGoogleLoading = true);
+    try {
+      final user = await AuthService().signInWithGoogle();
+      if (!mounted) return;
+      setState(() => _isGoogleLoading = false);
+
+      if (user == null) {
+        // User dismissed/canceled the account chooser
+        return;
+      }
+
+      if (user.role == 'Admin') {
+        Navigator.pushReplacementNamed(context, '/admin');
+      } else {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        setState(() => _isGoogleLoading = false);
+        final errorMsg = AuthService.getErrorMessage(e);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMsg),
+            backgroundColor: Colors.redAccent,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isGoogleLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Google Sign-In failed: $e'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+    }
+  }
 
   void _handleRegister() async {
     if (_formKey.currentState!.validate()) {
@@ -410,6 +471,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         text: 'Create Account ➔',
                         isLoading: _isLoading,
                         onPressed: _handleRegister,
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Continue with Google Button
+                      Row(
+                        children: [
+                          const Expanded(child: Divider(color: Color(0xFFE2E8F0), thickness: 1)),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Text(
+                              'OR',
+                              style: GoogleFonts.outfit(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF94A3B8),
+                              ),
+                            ),
+                          ),
+                          const Expanded(child: Divider(color: Color(0xFFE2E8F0), thickness: 1)),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+
+                      GoogleSignInButton(
+                        text: 'Sign up with Google',
+                        isLoading: _isGoogleLoading,
+                        onPressed: (_isLoading || _isGoogleLoading) ? null : _handleGoogleSignIn,
                       ),
                       const SizedBox(height: 14),
 

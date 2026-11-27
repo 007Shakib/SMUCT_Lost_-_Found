@@ -217,6 +217,18 @@ class AppDrawer extends StatelessWidget {
                     Navigator.pushNamed(context, '/notifications');
                   },
                 ),
+                if (AuthService().isAdmin)
+                  _buildDrawerTile(
+                    context,
+                    icon: Icons.admin_panel_settings_rounded,
+                    title: 'Admin Console',
+                    iconColor: AppTheme.accentCyan,
+                    textColor: AppTheme.accentCyan,
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/admin');
+                    },
+                  ),
                 _buildDrawerTile(
                   context,
                   icon: Icons.person_outline_rounded,

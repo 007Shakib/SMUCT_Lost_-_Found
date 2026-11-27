@@ -5,6 +5,8 @@ import '../../models/claim_model.dart';
 import '../../models/item_model.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../services/firestore_service.dart';
+import '../../services/auth_service.dart';
 
 /// Submit Claim Request Screen
 class SubmitClaimScreen extends StatefulWidget {
@@ -22,22 +24,34 @@ class _SubmitClaimScreenState extends State<SubmitClaimScreen> {
   void _handleSubmit(ItemModel item) async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isSubmitting = true);
-      await Future.delayed(const Duration(milliseconds: 600));
-      setState(() => _isSubmitting = false);
+
+      final currentUid = AuthService().currentUser?.userId ?? AuthService().currentFirebaseUser?.uid ?? MockData.currentUser.uid;
+      final currentName = AuthService().currentUser?.name ?? MockData.currentUser.name;
+      final currentPhone = AuthService().currentUser?.phone ?? MockData.currentUser.phone;
+      final currentDept = AuthService().currentUser?.department;
+      final currentStudentId = AuthService().currentUser?.studentId;
 
       final newClaim = ClaimModel(
         claimId: 'clm_${DateTime.now().millisecondsSinceEpoch}',
         itemId: item.itemId,
-        claimantId: MockData.currentUser.uid,
+        claimantId: currentUid,
         itemTitle: item.title,
-        justification: _justificationController.text,
+        justification: _justificationController.text.trim(),
         status: 'Pending',
         dateSubmitted: DateTime.now(),
+        claimantName: currentName,
+        claimantPhone: currentPhone,
+        claimantDepartment: currentDept,
+        claimantStudentId: currentStudentId,
+        itemImageUrl: item.imageUrl,
+        itemLocation: item.location,
       );
 
+      await FirestoreService().submitClaim(newClaim);
       MockData.claims.insert(0, newClaim);
 
       if (mounted) {
+        setState(() => _isSubmitting = false);
         showDialog(
           context: context,
           barrierDismissible: false,

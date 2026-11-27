@@ -1,17 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 /// Notification Model
 class NotificationModel {
   final String notificationId;
   final String userId;
   final String message;
-  final String type; // 'claim_update', 'post_moderation', 'system'
+  final String type; // 'claim_update', 'claim_approved', 'claim_rejected', 'claim_info_requested', 'post_moderation', 'system'
   final DateTime timestamp;
   bool readStatus;
+  final String? claimId;
+  final String? itemId;
 
   String? _customTitle;
   String? _customBody;
 
   String get id => notificationId;
-  String get title => _customTitle ?? (type == 'claim_update' ? 'Claim Update' : 'System Alert');
+  String get title => _customTitle ?? (type.startsWith('claim') ? 'Claim Update' : 'System Alert');
   String get body => _customBody ?? message;
   bool get isRead => readStatus;
   set isRead(bool val) => readStatus = val;
@@ -23,6 +27,8 @@ class NotificationModel {
     required this.type,
     required this.timestamp,
     this.readStatus = false,
+    this.claimId,
+    this.itemId,
     String? id,
     String? title,
     String? body,
@@ -33,15 +39,26 @@ class NotificationModel {
   }
 
   factory NotificationModel.fromMap(Map<String, dynamic> map, String id) {
+    DateTime parsedTime = DateTime.now();
+    if (map['timestamp'] != null) {
+      if (map['timestamp'] is Timestamp) {
+        parsedTime = (map['timestamp'] as Timestamp).toDate();
+      } else if (map['timestamp'] is String) {
+        parsedTime = DateTime.tryParse(map['timestamp']) ?? DateTime.now();
+      }
+    }
+
     return NotificationModel(
       notificationId: id,
       userId: map['userId'] ?? '',
       message: map['message'] ?? '',
       type: map['type'] ?? 'system',
-      timestamp: (map['timestamp'] != null)
-          ? DateTime.parse(map['timestamp'])
-          : DateTime.now(),
-      readStatus: map['readStatus'] ?? false,
+      timestamp: parsedTime,
+      readStatus: map['readStatus'] ?? map['isRead'] ?? false,
+      claimId: map['claimId'],
+      itemId: map['itemId'],
+      title: map['title'],
+      body: map['body'] ?? map['message'],
     );
   }
 
@@ -49,9 +66,13 @@ class NotificationModel {
     return {
       'userId': userId,
       'message': message,
+      'title': title,
+      'body': body,
       'type': type,
       'timestamp': timestamp.toIso8601String(),
       'readStatus': readStatus,
+      'claimId': claimId,
+      'itemId': itemId,
     };
   }
 }

@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import '../config/firebase_config.dart';
 import '../mock/mock_data.dart';
 import '../models/user_model.dart';
 
@@ -12,17 +14,31 @@ class AuthService {
   factory AuthService() => _instance;
   AuthService._internal();
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseAuth get _auth => FirebaseConfig.isInitialized ? FirebaseConfig.auth : FirebaseAuth.instance;
+  FirebaseFirestore get _firestore => FirebaseConfig.isInitialized ? FirebaseConfig.firestore : FirebaseFirestore.instance;
 
   UserModel? _currentUser;
 
   UserModel? get currentUser => _currentUser;
-  User? get currentFirebaseUser => _auth.currentUser;
-  bool get isAuthenticated => _auth.currentUser != null;
-  bool get isEmailVerified => _auth.currentUser?.emailVerified ?? false;
+  User? get currentFirebaseUser {
+    if (!FirebaseConfig.isInitialized) return null;
+    try {
+      return _auth.currentUser;
+    } catch (_) {
+      return null;
+    }
+  }
+  bool get isAuthenticated => currentFirebaseUser != null;
+  bool get isEmailVerified => currentFirebaseUser?.emailVerified ?? false;
   bool get isAdmin => _currentUser?.role == 'Admin';
-  Stream<User?> get authStateChanges => _auth.authStateChanges();
+  Stream<User?> get authStateChanges {
+    if (!FirebaseConfig.isInitialized) return const Stream.empty();
+    try {
+      return _auth.authStateChanges();
+    } catch (_) {
+      return const Stream.empty();
+    }
+  }
 
   /// User-friendly error message resolution
   static String getErrorMessage(dynamic error) {
@@ -70,6 +86,7 @@ class AuthService {
     String? studentId,
   }) async {
     try {
+      await FirebaseConfig.initialize();
       // Security: Never permit self-granting Admin privilege via registration
       final safeRole = (role == 'Teacher & Staff') ? 'Teacher & Staff' : 'Student';
 
@@ -140,6 +157,7 @@ class AuthService {
   /// Fetches profile from Cloud Firestore `users/{uid}` to resolve roles & status
   Future<UserModel?> loginWithEmailAndPassword(String email, String password) async {
     try {
+      await FirebaseConfig.initialize();
       final credential = await _auth.signInWithEmailAndPassword(
         email: email.trim(),
         password: password,
@@ -152,7 +170,11 @@ class AuthService {
 
       // Fetch profile from Firestore
       try {
-        final doc = await _firestore.collection('users').doc(user.uid).get();
+        final doc = await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .get()
+            .timeout(const Duration(seconds: 2));
         if (doc.exists && doc.data() != null) {
           userModel = UserModel.fromMap(doc.data()!, user.uid);
         } else {
@@ -219,16 +241,25 @@ class AuthService {
   /// Used on app restart to maintain auth state and resolve home destination
   Future<UserModel?> loadCurrentUserProfile() async {
     try {
+      if (!FirebaseConfig.isInitialized) {
+        await FirebaseConfig.initialize();
+      }
       final user = _auth.currentUser;
       if (user == null) {
         _currentUser = null;
         return null;
       }
 
-      await user.reload();
+      try {
+        await user.reload().timeout(const Duration(seconds: 2));
+      } catch (_) {}
       final updatedUser = _auth.currentUser;
 
-      final doc = await _firestore.collection('users').doc(user.uid).get();
+      final doc = await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .get()
+          .timeout(const Duration(seconds: 2));
       if (doc.exists && doc.data() != null) {
         _currentUser = UserModel.fromMap(doc.data()!, user.uid);
       } else {
@@ -335,9 +366,118 @@ class AuthService {
     }
   }
 
+  bool _googleSignInInitialized = false;
+
+  Future<void> _ensureGoogleSignInInitialized() async {
+    if (kIsWeb) return;
+    if (!_googleSignInInitialized) {
+      try {
+        await GoogleSignIn.instance.initialize();
+        _googleSignInInitialized = true;
+      } catch (e) {
+        debugPrint('GoogleSignIn.initialize warning: $e');
+      }
+    }
+  }
+
+  /// Authenticate user via Google Sign-In
+  /// Exchanges Google OAuth credentials for Firebase Authentication session
+  /// and synchronizes the profile in Cloud Firestore at `users/{uid}`
+  Future<UserModel?> signInWithGoogle() async {
+    try {
+      await FirebaseConfig.initialize();
+      UserCredential userCredential;
+
+      if (kIsWeb) {
+        final GoogleAuthProvider authProvider = GoogleAuthProvider();
+        userCredential = await _auth.signInWithPopup(authProvider);
+      } else {
+        await _ensureGoogleSignInInitialized();
+        final GoogleSignInAccount googleUser;
+        try {
+          googleUser = await GoogleSignIn.instance.authenticate();
+        } catch (e) {
+          debugPrint('Google Sign-In canceled or aborted: $e');
+          return null;
+        }
+
+        final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken,
+        );
+
+        userCredential = await _auth.signInWithCredential(credential);
+      }
+
+      final user = userCredential.user;
+      if (user == null) throw Exception('Google sign-in returned no user credentials.');
+
+      UserModel userModel;
+
+      // Check if user profile already exists in Firestore
+      try {
+        final doc = await _firestore.collection('users').doc(user.uid).get();
+        if (doc.exists && doc.data() != null) {
+          userModel = UserModel.fromMap(doc.data()!, user.uid);
+        } else {
+          final defaultRole = (user.email ?? '').toLowerCase().contains('admin') ? 'Admin' : 'Student';
+          userModel = UserModel(
+            userId: user.uid,
+            name: user.displayName ?? (user.email?.split('@').first ?? 'User'),
+            email: user.email ?? '',
+            role: defaultRole,
+            phoneNumber: user.phoneNumber,
+            profilePhotoUrl: user.photoURL,
+            isSuspended: false,
+            emailVerified: true,
+            createdAt: DateTime.now(),
+          );
+
+          await _firestore.collection('users').doc(user.uid).set(userModel.toMap());
+        }
+      } catch (e) {
+        debugPrint('Warning: Could not fetch/set Firestore profile on Google login ($e)');
+        final defaultRole = (user.email ?? '').toLowerCase().contains('admin') ? 'Admin' : 'Student';
+        userModel = UserModel(
+          userId: user.uid,
+          name: user.displayName ?? (user.email?.split('@').first ?? 'User'),
+          email: user.email ?? '',
+          role: defaultRole,
+          phoneNumber: user.phoneNumber,
+          profilePhotoUrl: user.photoURL,
+          isSuspended: false,
+          emailVerified: true,
+          createdAt: DateTime.now(),
+        );
+      }
+
+      if (userModel.isSuspended) {
+        await signOut();
+        throw FirebaseAuthException(
+          code: 'user-disabled',
+          message: 'Your account has been suspended by the campus administrator.',
+        );
+      }
+
+      _currentUser = userModel;
+      MockData.currentUser = userModel;
+      return _currentUser;
+    } on FirebaseAuthException {
+      rethrow;
+    } catch (e) {
+      debugPrint('AuthService.signInWithGoogle error: $e');
+      rethrow;
+    }
+  }
+
   /// Sign out active session
   Future<void> signOut() async {
     try {
+      if (!kIsWeb) {
+        try {
+          await GoogleSignIn.instance.signOut();
+        } catch (_) {}
+      }
       await _auth.signOut();
     } catch (e) {
       debugPrint('AuthService.signOut error: $e');

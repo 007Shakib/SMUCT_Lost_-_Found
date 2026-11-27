@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../mock/mock_data.dart';
 import '../../models/item_model.dart';
+import '../../services/firestore_service.dart';
+import '../../services/auth_service.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 
@@ -51,25 +53,28 @@ class _ReportItemScreenState extends State<ReportItemScreen> {
   void _handlePublish() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
-      await Future.delayed(const Duration(milliseconds: 600));
-      setState(() => _isLoading = false);
+
+      final currentUid = AuthService().currentUser?.userId ?? AuthService().currentFirebaseUser?.uid ?? MockData.currentUser.uid;
+      final currentName = AuthService().currentUser?.name ?? MockData.currentUser.name;
 
       final isLost = _status.contains('Lost');
       final newItem = ItemModel(
         itemId: 'itm_${DateTime.now().millisecondsSinceEpoch}',
-        userId: MockData.currentUser.uid,
+        userId: currentUid,
         categoryId: _selectedCategory,
-        title: _titleController.text,
-        description: _descriptionController.text,
+        title: _titleController.text.trim(),
+        description: _descriptionController.text.trim(),
         status: isLost ? 'Lost' : 'Found',
         claimStatus: 'Available',
         imageUrl: _photos.isNotEmpty ? _photos.first : 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600',
         location: _location,
         datePosted: _selectedDate,
-        authorName: MockData.currentUser.name,
+        authorName: currentName,
       );
 
+      await FirestoreService().addItemReport(newItem);
       MockData.items.insert(0, newItem);
+      setState(() => _isLoading = false);
 
       if (mounted) {
         showDialog(
